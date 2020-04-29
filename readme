@@ -1,0 +1,29 @@
+within the zone code branch:
+
+./extract.py -m <mds> -c <cma> -f <adm_xx_grp.csv> >> zonedata.csv
+
+idea here is to do the following:
+
+take 2 IP addresses in from the user:
+
+extract zone info from zonedata.csv
+
+case 0:
+   neither IP is found 
+   do nothing and return not able to search
+case 1:
+   ip1 found / ip2 not found
+   do search on policy(s) for ip1 for packet mode search
+case 2:
+   ip1 not found / ip2 found
+   see case 1 :)
+case 3: 
+   ip1 found / ip 2 found : with having same zone(s) match
+   return no firewall crossed
+case 4: 
+   ip1 found / ip2 found : having different zone(s)
+   do packet mode searches for zone iterations
+default:
+   ????
+   profit ?
+   
