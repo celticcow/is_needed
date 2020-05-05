@@ -40,6 +40,12 @@ class hostinfo(object):
     
     def peer_zone(self, search_str, search_meta):
         #dmz to zmd routed
+        debug = 1
+
+        if(debug == 0):
+            print("in function peer_zone()")
+            print(search_str)
+
         if('Services-DMZ' in search_str):
             for x in range(self.count):
                 if(self.policy[x] == 'services-zmd Security'):
@@ -50,11 +56,17 @@ class hostinfo(object):
             for x in range(self.count):
                 if(self.policy[x] == 'Services-DMZ Security'):
                     return True
-            #return False
-        #zmd to zmd routed
-        #elif('services-zmd' in search_str):
+                    
             for x in range(self.count):
-                if(self.policy[x] == 'services-zmd Security'):
+                if(self.policy[x] == 'WTC_ZMD Security'):  #was services-zmd Sec
+                    return True
+            return False
+        elif('WTC_ZMD' in search_str):
+            for x in range(self.count):
+                if(self.policy[x] == 'Services-DMZ Security'):
+                    return True
+            for x in range(self.count):
+                if(self.policy[x] == 'services-zmd Security'):  #was services-zmd Sec
                     return True
             return False
         #DC Seg when in same dc
@@ -67,6 +79,12 @@ class hostinfo(object):
                     print(my_meta_pre + "  " + pass_meta_pre)
                     return True
             return False
+        
+        ## Search to see if search names are same
+        for x in range(self.count):
+            if(self.policy[x] == search_str):
+                print(self.policy[x] + "   " + search_str)
+                return True
         ## more cases to come
         #....
         #Default return case

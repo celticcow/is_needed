@@ -143,8 +143,8 @@ def main():
 
     zones_list = build_zone_list()
 
-    ip1 = "204.135.249.10" #input("enter source IP address : ")
-    ip2 = "204.135.8.16" #input("enter destination IP address : ")
+    ip1 = "172.29.8.2" #input("enter source IP address : ")
+    ip2 = "204.135.16.5" #input("enter destination IP address : ")
     port = "9001" #input("enter port : ")
 
     hostinfo1 = hostinfo(ip1)
@@ -153,34 +153,7 @@ def main():
     hostinfo1 = build_hostinfo(hostinfo1, zones_list)
     print("**********************************")
     hostinfo2 = build_hostinfo(hostinfo2, zones_list)
-    #function later
-    """
-    for x in zones_list:
-        if(x.compare(ip1)):
-            if(debug == 1):
-                print("match in zone")
-                print(x.get_name())
-                print(x.get_meta())
-                print(x.get_policy())
-            #Lot going on here ... but yea  get just the info and remove the tag info
-            hostinfo1.add_info(x.get_meta().split(':')[1], x.get_policy().split(':')[1])
 
-            print("----------------")
-    
-    print("**********************************")
-
-    for y in zones_list:
-        if(y.compare(ip2)):
-            if(debug == 1):
-                print("match in zone")
-                print(y.get_name())
-                print(y.get_meta())
-                print(y.get_policy())
-            #no labels on me
-            hostinfo2.add_info(y.get_meta().split(':')[1], y.get_policy().split(':')[1])
-            print("----------------")
-    # end function for laters
-    """
     policy_check(hostinfo1, hostinfo2, port)
  
     print("***** End of Program *****")
