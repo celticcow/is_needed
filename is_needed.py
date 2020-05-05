@@ -114,7 +114,7 @@ def policy_check(hostinfo1, hostinfo2, port):
     else:
         print("Something went wrong with zone searches")
 
-    print(policylist)
+    return(policylist)
 #end of function  policy_check()
 
 def build_hostinfo(hostinfo, zone_list):
@@ -149,13 +149,19 @@ def main():
 
     hostinfo1 = hostinfo(ip1)
     hostinfo2 = hostinfo(ip2)
+    policies = set()
 
     hostinfo1 = build_hostinfo(hostinfo1, zones_list)
     print("**********************************")
     hostinfo2 = build_hostinfo(hostinfo2, zones_list)
 
-    policy_check(hostinfo1, hostinfo2, port)
+    policies = policy_check(hostinfo1, hostinfo2, port)
  
+    print(policies)
+
+    """
+    next section to do packet mode searches
+    """
     print("***** End of Program *****")
 #end of main()
 

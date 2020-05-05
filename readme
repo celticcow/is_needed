@@ -23,6 +23,8 @@ case 3:
 case 4: 
    ip1 found / ip2 found : having different zone(s)
    do packet mode searches for zone iterations
+   // this snowballed into a lot of use cases where we need to do the logic of what is 
+   direct routed and what has to passthrough the fw to another zone.
 default:
    ????
    profit ?
