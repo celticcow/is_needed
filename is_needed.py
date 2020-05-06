@@ -6,6 +6,7 @@ import sys
 from zone import Zone
 from hostinfo import hostinfo
 from network import Network
+from packetsearch import packetsearch
 
 """
 Greg Dunlap / celtic_cow 
@@ -158,6 +159,26 @@ def main():
     policies = policy_check(hostinfo1, hostinfo2, port)
  
     print(policies)
+
+    for policy in policies:
+        print(policy)
+
+        #need to add action accept check too
+        packet_mode_json = {
+            "name" : policy,
+            "filter" : "src:" + ip1 + " AND dst:" + ip2 + " AND svc:" + port,
+            "filter-settings" : {
+                "search-mode" : "packet"
+            }
+        }
+
+        print(packet_mode_json)
+
+        search = packetsearch(ip1, ip2, port, policy)
+
+        print(search.get_port())
+        search.create_json_string()
+        print(search.get_json())
 
     """
     next section to do packet mode searches
