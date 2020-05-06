@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python3  -W ignore::DeprecationWarning
 
 import csv
 import sys
@@ -7,6 +7,10 @@ from zone import Zone
 from hostinfo import hostinfo
 from network import Network
 from packetsearch import packetsearch
+
+#remove the InsecureRequestWarning messages
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 """
 Greg Dunlap / celtic_cow 
@@ -144,9 +148,9 @@ def main():
 
     zones_list = build_zone_list()
 
-    ip1 = "172.29.8.2" #input("enter source IP address : ")
+    ip1 = "146.18.2.137" #input("enter source IP address : ")
     ip2 = "204.135.16.5" #input("enter destination IP address : ")
-    port = "9001" #input("enter port : ")
+    port = "8443" #input("enter port : ")
 
     hostinfo1 = hostinfo(ip1)
     hostinfo2 = hostinfo(ip2)
@@ -164,7 +168,7 @@ def main():
         print(policy)
 
         #need to add action accept check too
-        packet_mode_json = {
+        """packet_mode_json = {
             "name" : policy,
             "filter" : "src:" + ip1 + " AND dst:" + ip2 + " AND svc:" + port,
             "filter-settings" : {
@@ -173,12 +177,19 @@ def main():
         }
 
         print(packet_mode_json)
-
+        """
+        if(debug == 1):
+            print("creating packet search object")
         search = packetsearch(ip1, ip2, port, policy)
 
-        print(search.get_port())
+        
         search.create_json_string()
         print(search.get_json())
+
+        search.do_search()
+
+        if(debug == 1):
+            print("destroying packet search object")
 
     """
     next section to do packet mode searches
