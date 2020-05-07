@@ -28,4 +28,8 @@ case 4:
 default:
    ????
    profit ?
-   
+  
+05.07.20 : 
+- packet mode search works
+- need to test inline and access-rule more
+- need to add packet mode only accept  
