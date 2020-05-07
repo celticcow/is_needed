@@ -149,8 +149,8 @@ def main():
     zones_list = build_zone_list()
 
     ip1 = "146.18.2.137" #input("enter source IP address : ")
-    ip2 = "204.135.16.5" #input("enter destination IP address : ")
-    port = "8443" #input("enter port : ")
+    ip2 = "10.230.64.5" #input("enter destination IP address : ")
+    port = "443" #input("enter port : ")
 
     hostinfo1 = hostinfo(ip1)
     hostinfo2 = hostinfo(ip2)
@@ -191,9 +191,6 @@ def main():
         if(debug == 1):
             print("destroying packet search object")
 
-    """
-    next section to do packet mode searches
-    """
     print("***** End of Program *****")
 #end of main()
 

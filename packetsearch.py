@@ -77,6 +77,8 @@ class packetsearch(object):
     ## Private Functions
     def __get_rulebase(self, search_json, sid, inline=False):
         print("in get_rulebase()")
+
+        debug = 0
         
         packet_result = apifunctions.api_call(self.mds, "show-access-rulebase", search_json, sid)
 
@@ -88,21 +90,75 @@ class packetsearch(object):
 
             if(packet_result['rulebase'][0]['type'] == "access-section"):
                 self.__parse_access_section(packet_result, search_json, inline)
-                pass
+                
             if(packet_result['rulebase'][0]['type'] == "access-rule"):
-                #parse_access_rule
-                pass
+                self.__parse_access_rule(packet_result, search_json, inline)
         else:
             print("No rules found")
 
-        print(json.dumps(packet_result))
+        if(debug == 1):
+            print(json.dumps(packet_result))
 
     #end of get_rulebase()
+
+    """
+    need test cases for regular and inline
+    """
+    def __parse_access_rule(self, result_json, packetmodejson, inline=False):
+        print("In Function parse_acess_rule () ")
+
+        total = result_json['total'] ## total number of rules to extract
+        ## don't need to track outer looping since depth is 1
+
+        object_d = get_object_dictionary(result_json)
+
+        for i in range(total):
+            print("Rule Number : " + str(result_json['rulebase'][i]['rule-number']))
+            print("Sources :")
+            for x in result_json['rulebase'][i]['source']:
+                if(inline == True):
+                    print("\t" + object_d[x])
+                else:
+                    print(object_d[x])
+            
+            print("Destinations :")
+            for x in result_json['rulebase'][i]['destination']:
+                if(inline == True):
+                    print("\t" + object_d[x])
+                else:
+                    print(object_d[x])
+            
+            print("Services :")
+            for x in result_json['rulebase'][i]['service']:
+                if(inline == True):
+                    print("\t" + object_d[x])
+                else:
+                    print(object_d[x])
+
+            if(inline == True):
+                print("\tAction : ")
+                print("\t" + object_d[result_json['rulebase'][i]['action']])
+            else:
+                print("Action : ")
+                print(object_d[result_json['rulebase'][i]['action']])
+        
+            try:
+                #not a big fan of the var scope
+                inline_uid = result_json['rulebase'][i]['inline-layer'] 
+                print(result_json['rulebase'][i]['inline-layer'])
+                print("@@@@@@@@@@@@@@@@ Start Inline Rule @@@@@@@@@@@@@@@@")
+                print("@@@@@@@@@@@@@@@@  End Inline Rule  @@@@@@@@@@@@@@@@")
+            except:
+                pass
+
+            print("------------------------------------------------------------------")
+        # end of for i in range(total)
+    #end of parse_access_rule
 
     def __get_object_dictionary(self, result_json):
         print("In Function get_object_dictionary() ")
         # Object Dictionary Start
-        odebug = 1
+        odebug = 0
         object_dic = {}
 
         if(odebug == 1):
@@ -141,7 +197,7 @@ class packetsearch(object):
         print(object_d)
 
         #working up to this point.  need to check var names and make OOP down.
-        """
+        
         while(i < total):
             #loop through all the results
             for rule in range(length_of_rulebase):
@@ -196,7 +252,7 @@ class packetsearch(object):
                     tmp_json.update({'uid' : inline_uid})
                     print(tmp_json)
                     
-                    self.__get_rulebase(ip_addr, tmp_json, sid, True)
+                    self.__get_rulebase(tmp_json, self.sid, True)
                     print("@@@@@@@@@@@@@@@@  End Inline Rule  @@@@@@@@@@@@@@@@")
                 except:
                     pass
@@ -209,7 +265,7 @@ class packetsearch(object):
                 length_of_rulebase = len(result_json['rulebase'][outer_index]['rulebase'])
             
         print("out of loop")
-        """
+        ### end of transpalent
     #end of function
 
     ## Modifiers
