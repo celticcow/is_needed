@@ -301,7 +301,7 @@ class packetsearch(object):
     def create_json_string(self):
         self.packet_mode_json = {
             "name" : self.policy,
-            "filter" : "src:" + self.source_ip + " AND dst:" + self.dest_ip + " AND svc:" + self.port,
+            "filter" : "src:" + self.source_ip + " AND dst:" + self.dest_ip + " AND svc:" + self.port + " AND RulebaseAction:Accept",
             "filter-settings" : {
                 "search-mode" : "packet"
             }
