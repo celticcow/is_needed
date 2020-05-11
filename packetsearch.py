@@ -41,6 +41,8 @@ class packetsearch(object):
             "WTCR_Cluster Security" : "192.168.159.161",
             "Cloud_Gateway Security" : "192.168.159.167"
         }
+        #choose from return or <br>
+        self.term = "\n"
 
     ## Accessors
 
@@ -66,7 +68,7 @@ class packetsearch(object):
     replication of main() function form packet-search code tree
     """
     def do_search(self):
-        print("in do_search")
+        print("in do_search", end=self.term)
         
         self.do_login()
 
@@ -76,17 +78,17 @@ class packetsearch(object):
     
     ## Private Functions
     def __get_rulebase(self, search_json, sid, inline=False):
-        print("in get_rulebase()")
+        print("in get_rulebase()", end=self.term)
 
         debug = 0
         
         packet_result = apifunctions.api_call(self.mds, "show-access-rulebase", search_json, sid)
 
         total = packet_result['total']
-        print("Total to search for : " + str(total))
+        print("Total to search for : " + str(total), end=self.term)
 
         if(total >= 1):
-            print(packet_result['rulebase'][0]['type']) # access-section or access-rule
+            print(packet_result['rulebase'][0]['type'], end=self.term) # access-section or access-rule
 
             if(packet_result['rulebase'][0]['type'] == "access-section"):
                 self.__parse_access_section(packet_result, search_json, inline)
@@ -97,7 +99,7 @@ class packetsearch(object):
             print("No rules found")
 
         if(debug == 1):
-            print(json.dumps(packet_result))
+            print(json.dumps(packet_result), end=self.term)
 
     #end of get_rulebase()
 
@@ -105,7 +107,7 @@ class packetsearch(object):
     need test cases for regular and inline
     """
     def __parse_access_rule(self, result_json, packetmodejson, inline=False):
-        print("In Function parse_acess_rule () ")
+        print("In Function parse_acess_rule () ", end=self.term)
 
         total = result_json['total'] ## total number of rules to extract
         ## don't need to track outer looping since depth is 1
@@ -113,78 +115,78 @@ class packetsearch(object):
         object_d = get_object_dictionary(result_json)
 
         for i in range(total):
-            print("Rule Number : " + str(result_json['rulebase'][i]['rule-number']))
-            print("Sources :")
+            print("Rule Number : " + str(result_json['rulebase'][i]['rule-number']), end=self.term)
+            print("Sources :", end=self.term)
             for x in result_json['rulebase'][i]['source']:
                 if(inline == True):
-                    print("\t" + object_d[x])
+                    print("\t" + object_d[x], end=self.term)
                 else:
-                    print(object_d[x])
+                    print(object_d[x], end=self.term)
             
-            print("Destinations :")
+            print("Destinations :", end=self.term)
             for x in result_json['rulebase'][i]['destination']:
                 if(inline == True):
-                    print("\t" + object_d[x])
+                    print("\t" + object_d[x], end=self.term)
                 else:
-                    print(object_d[x])
+                    print(object_d[x], end=self.term)
             
-            print("Services :")
+            print("Services :", end=self.term)
             for x in result_json['rulebase'][i]['service']:
                 if(inline == True):
-                    print("\t" + object_d[x])
+                    print("\t" + object_d[x], end=self.term)
                 else:
-                    print(object_d[x])
+                    print(object_d[x], end=self.term)
 
             if(inline == True):
-                print("\tAction : ")
-                print("\t" + object_d[result_json['rulebase'][i]['action']])
+                print("\tAction : ", end=self.term)
+                print("\t" + object_d[result_json['rulebase'][i]['action']], end=self.term)
             else:
                 print("Action : ")
-                print(object_d[result_json['rulebase'][i]['action']])
+                print(object_d[result_json['rulebase'][i]['action']], end=self.term)
         
             try:
                 #not a big fan of the var scope
                 inline_uid = result_json['rulebase'][i]['inline-layer'] 
-                print(result_json['rulebase'][i]['inline-layer'])
-                print("@@@@@@@@@@@@@@@@ Start Inline Rule @@@@@@@@@@@@@@@@")
-                print("@@@@@@@@@@@@@@@@  End Inline Rule  @@@@@@@@@@@@@@@@")
+                print(result_json['rulebase'][i]['inline-layer'], end=self.term)
+                print("@@@@@@@@@@@@@@@@ Start Inline Rule @@@@@@@@@@@@@@@@", end=self.term)
+                print("@@@@@@@@@@@@@@@@  End Inline Rule  @@@@@@@@@@@@@@@@", end=self.term)
             except:
                 pass
 
-            print("------------------------------------------------------------------")
+            print("------------------------------------------------------------------", end=self.term)
         # end of for i in range(total)
     #end of parse_access_rule
 
     def __get_object_dictionary(self, result_json):
-        print("In Function get_object_dictionary() ")
+        print("In Function get_object_dictionary() ", end=self.term)
         # Object Dictionary Start
         odebug = 0
         object_dic = {}
 
         if(odebug == 1):
-            print(json.dumps(result_json))
-            print("******* OBJ DIC *******")
-            print(result_json['objects-dictionary'])
+            print(json.dumps(result_json), end=self.term)
+            print("******* OBJ DIC *******", end=self.term)
+            print(result_json['objects-dictionary'], end=self.term)
         
         objdic_size = len(result_json['objects-dictionary'])
         #print(objdic_size)
         for j in range(objdic_size):
             if(odebug == 1):
-                print(result_json['objects-dictionary'][j]['name'])
-                print(result_json['objects-dictionary'][j]['uid'])
+                print(result_json['objects-dictionary'][j]['name'], end=self.term)
+                print(result_json['objects-dictionary'][j]['uid'], end=self.term)
             object_dic[result_json['objects-dictionary'][j]['uid']] = result_json['objects-dictionary'][j]['name']
 
         if(odebug == 1):
-            print("******* OBJ DIC *******")
-            print(object_dic)
-            print("*************************************************")
+            print("******* OBJ DIC *******", end=self.term)
+            print(object_dic, end=self.term)
+            print("*************************************************", end=self.term)
         
         #Object Dictionalry End
         return(object_dic)
     #end of get_obj_dic
 
     def __parse_access_section(self, result_json, packetmodejson, inline=False):
-        print("in parse_access_section")
+        print("in parse_access_section", end=self.term)
         
         total = result_json['total'] ## total number we need to extract
         outer_index = 0  #track 'rulebase'[outer_index] to keep up with section
@@ -193,8 +195,8 @@ class packetsearch(object):
         object_d = self.__get_object_dictionary(result_json)
 
         length_of_rulebase = len(result_json['rulebase'][outer_index]['rulebase'])
-        print("going into loop")
-        print(object_d)
+        print("going into loop", end=self.term)
+        print(object_d, end=self.term)
 
         #working up to this point.  need to check var names and make OOP down.
         
@@ -202,69 +204,69 @@ class packetsearch(object):
             #loop through all the results
             for rule in range(length_of_rulebase):
                 if(inline == True):
-                    print("\tRule Number : " + str(result_json['rulebase'][outer_index]['rulebase'][rule]['rule-number']))
+                    print("\tRule Number : " + str(result_json['rulebase'][outer_index]['rulebase'][rule]['rule-number']), end=self.term)
                 else:
-                    print("Rule Number : " + str(result_json['rulebase'][outer_index]['rulebase'][rule]['rule-number']))
+                    print("Rule Number : " + str(result_json['rulebase'][outer_index]['rulebase'][rule]['rule-number']), end=self.term)
                 if(inline == True):
-                    print("\tSources :")
+                    print("\tSources :", end=self.term)
                 else:
-                    print("Sources :")
+                    print("Sources :", end=self.term)
                 for x in result_json['rulebase'][outer_index]['rulebase'][rule]['source']:
                     if(inline == True):
-                        print("\t" + object_d[x])
+                        print("\t" + object_d[x], end=self.term)
                     else:
-                        print(object_d[x])
+                        print(object_d[x], end=self.term)
                 
                 if(inline == True):
-                    print("\tDestinations :")
+                    print("\tDestinations :", end=self.term)
                 else:
-                    print("Destinations :")
+                    print("Destinations :", end=self.term)
                 for x in result_json['rulebase'][outer_index]['rulebase'][rule]['destination']:
                     if(inline == True):
-                        print("\t" + object_d[x])
+                        print("\t" + object_d[x], end=self.term)
                     else:
-                        print(object_d[x])
+                        print(object_d[x], end=self.term)
                 
                 if(inline == True):
-                    print("\tServices :")
+                    print("\tServices :", end=self.term)
                 else:
-                    print("Services :")
+                    print("Services :", end=self.term)
                 for x in result_json['rulebase'][outer_index]['rulebase'][rule]['service']:
                     if(inline == True):
-                        print("\t" + object_d[x])
+                        print("\t" + object_d[x], end=self.term)
                     else:
-                        print(object_d[x])
+                        print(object_d[x], end=self.term)
 
                 if(inline == True):
-                    print("\tAction : ")
-                    print("\t" + object_d[result_json['rulebase'][outer_index]['rulebase'][rule]['action']])
+                    print("\tAction : ", end=self.term)
+                    print("\t" + object_d[result_json['rulebase'][outer_index]['rulebase'][rule]['action']], end=self.term)
                 else:
-                    print("Action : ")
-                    print(object_d[result_json['rulebase'][outer_index]['rulebase'][rule]['action']])
+                    print("Action : ", end=self.term)
+                    print(object_d[result_json['rulebase'][outer_index]['rulebase'][rule]['action']], end=self.term)
                 
                 try:
                     #not a big fan of the var scope
                     inline_uid = result_json['rulebase'][outer_index]['rulebase'][rule]['inline-layer'] 
-                    print(result_json['rulebase'][outer_index]['rulebase'][rule]['inline-layer'])
-                    print("@@@@@@@@@@@@@@@@ Start Inline Rule @@@@@@@@@@@@@@@@")
+                    print(result_json['rulebase'][outer_index]['rulebase'][rule]['inline-layer'], end=self.term)
+                    print("@@@@@@@@@@@@@@@@ Start Inline Rule @@@@@@@@@@@@@@@@", end=self.term)
                     tmp_json = packetmodejson
                     del tmp_json['name']
                     tmp_json.update({'uid' : inline_uid})
-                    print(tmp_json)
+                    print(tmp_json, end=self.term)
                     
                     self.__get_rulebase(tmp_json, self.sid, True)
-                    print("@@@@@@@@@@@@@@@@  End Inline Rule  @@@@@@@@@@@@@@@@")
+                    print("@@@@@@@@@@@@@@@@  End Inline Rule  @@@@@@@@@@@@@@@@", end=self.term)
                 except:
                     pass
                 
-                print("------------------------------------------------------------------")
+                print("------------------------------------------------------------------", end=self.term)
                 i = i + 1
 
             outer_index = outer_index +  1
             if(i < total):
                 length_of_rulebase = len(result_json['rulebase'][outer_index]['rulebase'])
             
-        print("out of loop")
+        print("out of loop", end=self.term)
         ### end of transpalent
     #end of function
 
@@ -274,16 +276,16 @@ class packetsearch(object):
         self.sid = sid
         
     def do_login(self):
-        print(self.mds)
-        print(self.policy2cma[self.policy])
+        print(self.mds, end=self.term)
+        print(self.policy2cma[self.policy], end=self.term)
 
         self.sid = apifunctions.login("roapi", "1qazxsw2", self.mds, self.policy2cma[self.policy])
-        print("session id : " + self.sid)
+        print("session id : " + self.sid, end=self.term)
 
     def do_logout(self):
         time.sleep(10)
         logout_result = apifunctions.api_call(self.mds, "logout", {}, self.sid)
-        print(logout_result)
+        print(logout_result, end=self.term)
 
 
     def set_source_ip(self, ip):

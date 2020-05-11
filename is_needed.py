@@ -20,7 +20,7 @@ Greg Dunlap / celtic_cow
 """
 read from zonedata.csv and build list of zones
 """
-def build_zone_list():
+def build_zone_list(term="\n"):
     debug = 1
     if(debug == 1):
         print("in build_zone_list()")
@@ -60,10 +60,10 @@ def build_zone_list():
 """
 take in two hostsinfo objects and build map of policy differences
 """
-def policy_check(hostinfo1, hostinfo2, port):
+def policy_check(hostinfo1, hostinfo2, port, term="\n"):
     debug = 1
     if(debug == 1):
-        print("In function policy_check()")
+        print("In function policy_check()", end=term)
     
     host_len1 = hostinfo1.get_count()
     host_len2 = hostinfo2.get_count()
@@ -72,18 +72,18 @@ def policy_check(hostinfo1, hostinfo2, port):
 
     ## use case 1: no hits for either 1.  nothing to do
     if(host_len1 == 0 and host_len2 == 0):
-        print("Nothing to do : no hits!")
+        print("Nothing to do : no hits!", end=term)
         return
     elif(host_len1 == 0 and host_len2 > 0):
         #host1 had no hits, but host2 did
-        print("host_len1 = 0 : host_len2 > 0")
+        print("host_len1 = 0 : host_len2 > 0", end=term)
 
         for x in range(host_len2):
             policylist.add(hostinfo2.get_policy(x))
 
     elif(host_len2 == 0 and host_len1 > 0):
         #host1 had hits but host2 had no hits
-        print("host_len1 > 0 : host_len2 = 0")
+        print("host_len1 > 0 : host_len2 = 0", end=term)
 
         for x in range(host_len1):
             policylist.add(hostinfo1.get_policy(x))
@@ -102,7 +102,7 @@ def policy_check(hostinfo1, hostinfo2, port):
             tmp_meta   = hostinfo1.get_meta(i)
 
             if(hostinfo2.peer_zone(tmp_policy, tmp_meta)):
-                print("don't need to include : " + tmp_policy)
+                print("don't need to include : " + tmp_policy, end=term)
             else:
                 policylist.add(hostinfo1.get_policy(i))
             
@@ -111,27 +111,27 @@ def policy_check(hostinfo1, hostinfo2, port):
             tmp_meta   = hostinfo2.get_meta(j)
 
             if(hostinfo1.peer_zone(tmp_policy, tmp_meta)):
-                print("don't need to include : " + tmp_policy)
+                print("don't need to include : " + tmp_policy, end=term)
             else:
                 policylist.add(hostinfo2.get_policy(j))
 
-        print("-------------------------")
+        print("-------------------------", end=term)
     else:
-        print("Something went wrong with zone searches")
+        print("Something went wrong with zone searches", end=term)
 
     return(policylist)
 #end of function  policy_check()
 
-def build_hostinfo(hostinfo, zone_list):
+def build_hostinfo(hostinfo, zone_list, term="\n"):
     debug = 1
 
     for x in zone_list:
         if(x.compare(hostinfo.get_ip())):
             if(debug == 1):
-                print("match in zone")
-                print(x.get_name())
-                print(x.get_meta())
-                print(x.get_policy())
+                print("match in zone", end=term)
+                print(x.get_name(), end=term)
+                print(x.get_meta(), end=term)
+                print(x.get_policy(), end=term)
             hostinfo.add_info(x.get_meta().split(':')[1], x.get_policy().split(':')[1])
     
     return(hostinfo)
@@ -142,30 +142,33 @@ main function
 """
 def main():
     debug = 1
+    term="\n"
 
     if(debug == 1):
-        print("in main()")
+        print("in main()", end=term)
 
-    zones_list = build_zone_list()
+    zones_list = build_zone_list(term)
 
-    ip1 = "146.18.2.137" #input("enter source IP address : ")
-    ip2 = "10.230.64.5" #input("enter destination IP address : ")
-    port = "443" #input("enter port : ")
+    ip1  = "146.18.2.137"#input("enter source IP address : ")
+    ip2  = "204.135.8.50"#input("enter destination IP address : ")
+    port = "443"#input("enter port : ")
 
     hostinfo1 = hostinfo(ip1)
     hostinfo2 = hostinfo(ip2)
     policies = set()
 
-    hostinfo1 = build_hostinfo(hostinfo1, zones_list)
-    print("**********************************")
-    hostinfo2 = build_hostinfo(hostinfo2, zones_list)
+    print("Zone Data for Source: ", end=term)
+    hostinfo1 = build_hostinfo(hostinfo1, zones_list, term)
+    print("Zone Data for Dest: ", end=term)
+    hostinfo2 = build_hostinfo(hostinfo2, zones_list, term)
+    print("**********************************", end=term)
 
-    policies = policy_check(hostinfo1, hostinfo2, port)
- 
-    print(policies)
+    policies = policy_check(hostinfo1, hostinfo2, port, term)
+    print("Policies to Search Against", end=term)
+    print(policies, end=term)
 
     for policy in policies:
-        print(policy)
+        print(policy, end=term)
 
         #need to add action accept check too
         """packet_mode_json = {
@@ -179,19 +182,19 @@ def main():
         print(packet_mode_json)
         """
         if(debug == 1):
-            print("creating packet search object")
+            print("creating packet search object", end=term)
         search = packetsearch(ip1, ip2, port, policy)
 
         
         search.create_json_string()
-        print(search.get_json())
+        print(search.get_json(), end=term)
 
         search.do_search()
 
         if(debug == 1):
-            print("destroying packet search object")
+            print("destroying packet search object", end=term)
 
-    print("***** End of Program *****")
+    print("***** End of Program *****", end=term)
 #end of main()
 
 if __name__ == "__main__":
