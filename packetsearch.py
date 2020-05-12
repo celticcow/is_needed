@@ -42,7 +42,7 @@ class packetsearch(object):
             "Cloud_Gateway Security" : "192.168.159.167"
         }
         #choose from return or <br>
-        self.term = "\n"
+        self.term = "<br>"
 
     ## Accessors
 

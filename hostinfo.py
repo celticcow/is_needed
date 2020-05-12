@@ -60,6 +60,11 @@ class hostinfo(object):
             for x in range(self.count):
                 if(self.policy[x] == 'WTC_ZMD Security'):  #was services-zmd Sec
                     return True
+            
+            for x in range(self.count):
+                if(self.policy[x] == 'services-zmd Security'):  #was services-zmd Sec
+                    return True
+
             return False
         elif('WTC_ZMD' in search_str):
             for x in range(self.count):

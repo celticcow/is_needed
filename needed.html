@@ -4,7 +4,20 @@
     </head>
 
     <body>
-        Enter the Source IP -> Destination IP : Port number <br>
+        
+        <form method="get" action="../cgi-bin/need/need_cgi.py" id="form1">
+            <br>
+            This works for adm1 / adm5 / adm11 / adm17 (Cloud Gateway)  ONLY <br>
+            <br>
+            Enter the Source IP -> Destination IP : Port number <br>
+            Source IP : <input type="text" size="15" maxlength="15" name="sourceip"><br>
+            Destination IP : <input type="text" size="15" maxlength="15" name="destip"><br>
+            Service : <input type="text" size="15" maxlength="15" name="service"><br>
+            <br><br>
+            <input type="submit" value="subnet" name="submit"><br>
+        
+        
+        </form>
     </body>
 
 
