@@ -13,7 +13,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 class packetsearch(object):
 
     #constructor
-    def __init__(self, source_ip = "0.0.0.0", dest_ip = "0.0.0.0", port = "0", policy = "NA"):
+    def __init__(self, source_ip = "0.0.0.0", dest_ip = "0.0.0.0", port = "0", policy = "NA", term = "\n"):
         self.source_ip = source_ip
         self.dest_ip = dest_ip
         self.port = port
@@ -42,7 +42,7 @@ class packetsearch(object):
             "Cloud_Gateway Security" : "192.168.159.167"
         }
         #choose from return or <br>
-        self.term = "<br>"
+        self.term = term
 
     ## Accessors
 

@@ -197,7 +197,7 @@ def main():
         """
         if(debug == 1):
             print("creating packet search object", end=term)
-        search = packetsearch(ip1, ip2, port, policy)
+        search = packetsearch(ip1, ip2, port, policy, term)
    
         search.create_json_string()
         print(search.get_json(), end=term)
