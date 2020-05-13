@@ -160,19 +160,21 @@ def main():
     print ("<br><br>")
     print("Needed Search 0.1<br><br>")
 
+    print("----- Search Terms -----", end=term)
     print(ip1, end=term)
     print(ip2, end=term)
     print(port, end=term)
     print("--------------------", end=term)
 
     zones_list = build_zone_list(term)
-
+    print("<br>")
     hostinfo1 = hostinfo(ip1)
     hostinfo2 = hostinfo(ip2)
     policies = set()
 
     print("Zone Data for Source: ", end=term)
     hostinfo1 = build_hostinfo(hostinfo1, zones_list, term)
+    print("<br><br>")
     print("Zone Data for Dest: ", end=term)
     hostinfo2 = build_hostinfo(hostinfo2, zones_list, term)
     print("**********************************", end=term)
@@ -181,20 +183,10 @@ def main():
     print("Policies to Search Against", end=term)
     print(policies, end=term)
 
+    print("---------------------------------------------------------------", end=term)
     for policy in policies:
         print(policy, end=term)
 
-        #need to add action accept check too
-        """packet_mode_json = {
-            "name" : policy,
-            "filter" : "src:" + ip1 + " AND dst:" + ip2 + " AND svc:" + port,
-            "filter-settings" : {
-                "search-mode" : "packet"
-            }
-        }
-
-        print(packet_mode_json)
-        """
         if(debug == 1):
             print("creating packet search object", end=term)
         search = packetsearch(ip1, ip2, port, policy, term)

@@ -191,12 +191,15 @@ class packetsearch(object):
         total = result_json['total'] ## total number we need to extract
         outer_index = 0  #track 'rulebase'[outer_index] to keep up with section
         i = 0  # while loop indexer 
+        debug = 0
 
         object_d = self.__get_object_dictionary(result_json)
 
         length_of_rulebase = len(result_json['rulebase'][outer_index]['rulebase'])
-        print("going into loop", end=self.term)
-        print(object_d, end=self.term)
+
+        if(debug == 1):
+            print("going into loop", end=self.term)
+            print(object_d, end=self.term)
 
         #working up to this point.  need to check var names and make OOP down.
         
